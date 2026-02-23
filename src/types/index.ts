@@ -31,3 +31,21 @@ export interface TaskFilterProps {
     priority?: 'low' | 'medium' | 'high';
   }) => void;
 }
+
+export interface FormProps {
+   title: string;
+  description: string;
+  status: TaskStatus;
+  priority: 'low' | 'medium' | 'high';
+  dueDate: string;
+}
+
+export interface TaskFormProps {
+  onAddTask: (
+    title: string,
+    description: string,
+    status: TaskStatus,
+    priority: "low" | "medium" | "high",
+    dueDate: string,
+  ) => void;
+}
