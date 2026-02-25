@@ -1,4 +1,4 @@
-                              Task Dashboard App
+                              #Task Dashboard App
 
 
 
@@ -7,7 +7,7 @@
    The Task Manager application uses React’s component-based architecture to manage tasks efficiently. Tasks are stored in application state and passed to child components via props. Users can add new tasks through a form, which validates input before adding it to the task list. Each task can be edited, deleted, or have its status updated using interactive controls. Search functionality is implemented with debouncing to optimize performance by reducing unnecessary filtering while typing. Filtering allows users to view tasks based on status and priority, improving task organization. The UI is fully responsive, adapting to different screen sizes, and uses Tailwind CSS for styling. All task data is persisted with local storage.
 
 
-# Features:
+## Features:
 
    * Add new tasks
 
@@ -29,7 +29,7 @@
 
 
 
-# Tech Stack:
+## Tech Stack:
 
   * React
 
@@ -42,8 +42,7 @@
 
 
 
-# Project Structure:
-
+## Project Structure:
 task-dashboard/
 ├── src/
 │   ├── components/
@@ -62,10 +61,10 @@ task-dashboard/
 │   │   └── taskUtils.ts
 │   ├── App.tsx
 ├── main.tsx
-└── package.json     
+└── package.json  
 
 
-# Installation: 
+## Installation: 
 
 * Clone the repository
 git clone https://github.com/your-username/task-manager-app.git
@@ -81,8 +80,8 @@ npm run dev
 
 
 
-# Component Overview:
-# TaskForm
+## Component Overview:
+### TaskForm
 
    * Handles adding and editing tasks
 
@@ -92,13 +91,13 @@ npm run dev
 
    * Supports cancel functionality
 
-# TaskList
+### TaskList
 
    * Displays list of tasks
 
    * Passes actions to TaskItem
 
-# TaskItem
+### TaskItem
 
    * Displays task details
 
@@ -106,13 +105,13 @@ npm run dev
 
    * Supports delete and edit actions
 
-# TaskFilter
+### TaskFilter
 
    * Filters tasks by status and priority
 
    * Displays active filter indicators
 
-# Dashboard
+### Dashboard
 
    * Central state management
 
@@ -120,7 +119,7 @@ npm run dev
 
 
 
-# Reflection questions:
+## Reflection questions:
 
 1. How you implemented React and TypeScript features?
 
