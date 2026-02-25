@@ -56,8 +56,8 @@ function TaskItem({ task, onStatusChange, onDelete, onEdit }: TaskItemProps) {
 
       {/* Footer */}
       <div className="task-footer flex gap-4 mt-2 text-sm">
-        <div className={`priority ${task.priority}`}>Priority: {task.priority}</div>
-        <div className="due-date text-gray-500">Due: {task.dueDate}</div>
+        <div className="priority text-green-500">Priority: {task.priority}</div>
+        <div className="due-date text-blue-500">Due: {task.dueDate}</div>
       </div>
     </div>
   );

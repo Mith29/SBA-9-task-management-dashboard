@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import type { TaskStatus, TaskListProps, Task } from "../../types";
+import type { TaskListProps, Task } from "../../types";
 import { TaskItem } from "./TaskItem";
 
 function TaskList({ tasks, onStatusChange, onDelete, onEdit }: TaskListProps) {

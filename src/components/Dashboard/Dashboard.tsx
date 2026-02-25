@@ -68,7 +68,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="bg-indigo-200 min-h-screen p-6 flex flex-col items-center gap-6">
+    <div className="bg-blue-100 min-h-screen p-6 flex flex-col items-center gap-6">
       <h1 className="text-4xl font-semibold text-center">Task Dashboard</h1>
 
       <button
@@ -99,20 +99,24 @@ function Dashboard() {
 
       <TaskFilter onFilterChange={handleFilterChange} />
 
-      <button onClick={() => exportTasks(tasks)} className="border-1 rounded-lg p-2">
+      <button onClick={() => exportTasks(tasks)}  className="bg-indigo-600 text-white px-4 py-2 rounded">
         Export Tasks
       </button>
+<button
+  type="button"
+  onClick={() => document.getElementById("import-file")?.click()}
+  className="bg-indigo-600 text-white px-4 py-2 rounded"
+>
+  Import Tasks
+</button>
 
-      <label htmlFor="import-file" className="border-1 rounded-lg p-2">
-        Import Tasks
-      </label>
-      <input
-        id="import-file"
-        type="file"
-        accept="application/json"
-        onChange={(e) => importTasks(e, setTasks)}
-        className="border-1 rounded-lg p-2"
-      />
+<input
+  id="import-file"
+  type="file"
+  accept="application/json"
+  onChange={(e) => importTasks(e, setTasks)}
+  className="hidden"
+/>
 
       <div className="flex flex-col gap-2 items-center">
         <label htmlFor="sort" className=" font-bold">
