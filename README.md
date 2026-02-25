@@ -1,4 +1,4 @@
-                              #Task Dashboard App
+                              Task Dashboard App
 
 
 
@@ -40,43 +40,26 @@
   * React Hooks (useState, useEffect)
 
 
-
-
-## Project Structure:
-task-dashboard/
-├── src/
-│   ├── components/
-│   │   ├── TaskList/
-│   │   │   ├── TaskList.tsx
-│   │   │   └── TaskItem.tsx
-│   │   ├── TaskForm/
-│   │   │   └── TaskForm.tsx
-│   │   ├── TaskFilter/
-│   │   │   └── TaskFilter.tsx
-│   │   └── Dashboard/
-│   │       └── Dashboard.tsx
-│   ├── types/
-│   │   └── index.ts
-│   ├── utils/
-│   │   └── taskUtils.ts
-│   ├── App.tsx
-├── main.tsx
-└── package.json  
+ 
 
 
 ## Installation: 
 
 * Clone the repository
-git clone https://github.com/your-username/task-manager-app.git
+
+  git clone https://github.com/your-username/task-manager-app.git
 
 * Navigate into the project
-cd task-manager-app
+
+  cd task-manager-app
 
 * Install dependencies
-npm install
+
+   npm install
 
 * Start development server
-npm run dev
+
+   npm run dev
 
 
 
