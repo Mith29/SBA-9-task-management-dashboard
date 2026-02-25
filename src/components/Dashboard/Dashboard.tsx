@@ -5,6 +5,7 @@ import TaskForm from "../TaskForm/TaskForm";
 import TaskFilter from "../TaskFilter/TaskFilter";
 import { sortTasks, exportTasks, importTasks } from "../../utils/taskUtils";
 import type { SortType } from "../../utils/taskUtils";
+import { ArrowDownTrayIcon , ArrowDownIcon } from "@heroicons/react/16/solid";
 
 type Filter = {
   status?: TaskStatus | "";
@@ -72,8 +73,7 @@ function Dashboard() {
       <h1 className="text-4xl font-semibold text-center">Task Dashboard</h1>
 
       <button
-        className="px-4 py-2 border-2 rounded-md font-bold hover:bg-indigo-300 transition"
-        onClick={() => {
+className="bg-indigo-600 text-white px-4 py-2 rounded"        onClick={() => {
           setEditingTask(null);
           setShowForm(true);
         }}
@@ -100,14 +100,19 @@ function Dashboard() {
       <TaskFilter onFilterChange={handleFilterChange} />
 
       <button onClick={() => exportTasks(tasks)}  className="bg-indigo-600 text-white px-4 py-2 rounded">
-        Export Tasks
+       <div className="flex gap-[10px]">
+         <ArrowDownTrayIcon className="h-5 w-5"/> Export Tasks
+       </div>
       </button>
 <button
   type="button"
   onClick={() => document.getElementById("import-file")?.click()}
   className="bg-indigo-600 text-white px-4 py-2 rounded"
 >
-  Import Tasks
+  <div className="flex">
+    <ArrowDownIcon className="h-5 w-5"/>
+    Import Tasks
+  </div>
 </button>
 
 <input
