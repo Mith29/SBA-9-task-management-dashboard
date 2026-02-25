@@ -35,38 +35,54 @@ function TaskList({ tasks, onStatusChange, onDelete, onEdit }: TaskListProps) {
   ));
 
   return (
-    <>
-      <label htmlFor="searchTask" className="sr-only">Search Task</label>
-      <input
-        type="search"
-        id="searchTask"
-        placeholder="Search for Task"
-        value={searchTask}
-        onChange={(e) => setSearchTask(e.target.value)}
-        className="border-1 rounded-lg h-10 w-125 bg-white"
-      />
+  <div className="w-full max-w-4xl mx-auto px-4 flex flex-col gap-4">
 
-      {isTyping && <p>Searching...</p>}
+    {/* Search */}
+    <label htmlFor="searchTask" >
+      Search Task
+    </label>
 
-      {filteredData.length > 0 && (
-        <div className="mb-2">
-          <h2 className="font-semibold">Search Results:</h2>
+    <input
+      type="search"
+      id="searchTask"
+      placeholder="Search for Task"
+      value={searchTask}
+      onChange={(e) => setSearchTask(e.target.value)}
+      className="border rounded-lg h-10 w-full bg-white px-3"
+    />
+
+    {isTyping && <p className="text-sm text-gray-500">Searching...</p>}
+
+    {/* Search Results */}
+    {filteredData.length > 0 && (
+      <div className="flex flex-col gap-3">
+        <h2 className="font-semibold text-lg">Search Results:</h2>
+
+        <div className="flex flex-col gap-3">
           {filteredData.map((task) => (
             <TaskItem
               key={task.id}
               task={task}
               onStatusChange={onStatusChange}
               onDelete={onDelete}
-              onEdit={onEdit} // support editing from search
+              onEdit={onEdit}
             />
           ))}
         </div>
-      )}
+      </div>
+    )}
 
-      <h1 className="font-semibold">Tasks:</h1>
-      {taskElement}
-    </>
-  );
+    {/* All Tasks */}
+    <div className="flex flex-col gap-3">
+      <h1 className="font-semibold text-lg">Tasks:</h1>
+
+      <div className="flex flex-col gap-3">
+        {taskElement}
+      </div>
+    </div>
+
+  </div>
+);
 }
 
 export default TaskList;

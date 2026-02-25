@@ -15,7 +15,7 @@ function TaskFilter({ onFilterChange }: TaskFilterProps) {
   }
   
   return (
-    <div className="flex gap-[100px] mt-20 justify-center font-bold">
+    <div className="flex flex-col md:flex-row gap-6 w-full">
     <div>
       <h1 className="p-1">Filter by Status:</h1>
       <select
