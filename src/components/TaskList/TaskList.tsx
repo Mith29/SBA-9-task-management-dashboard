@@ -1,62 +1,72 @@
 import { useEffect, useState, useMemo } from "react";
-import type { TaskStatus } from "../../types";
-import type { TaskListProps } from "../../types";
+import type { TaskStatus, TaskListProps, Task } from "../../types";
 import { TaskItem } from "./TaskItem";
-import type { Task } from "../../types";
 
-function TaskList({ tasks, onStatusChange, onDelete }: TaskListProps){
+function TaskList({ tasks, onStatusChange, onDelete, onEdit }: TaskListProps) {
+  const [searchTask, setSearchTask] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [filteredData, setFilteredData] = useState<Task[]>([]);
 
-    const [searchTask, setSearchTask] = useState('');
-    const [debouncedQuery, setDebouncedQuery] = useState('');
-    const [filteredData, setFilteredData] = useState<Task[]>([]);
+  const isTyping = useMemo(() => searchTask !== debouncedQuery, [debouncedQuery, searchTask]);
 
-    const isTyping = useMemo(() => {
-    if (searchTask === debouncedQuery) {
-      return false;
-    } else {
-      return true;
-    }
-  }, [debouncedQuery, searchTask]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchTask);
+      setFilteredData(
+        searchTask
+          ? tasks.filter((item) =>
+              item.title.toLowerCase().includes(searchTask.toLowerCase())
+            )
+          : []
+      );
+    }, 500);
 
-    useEffect(()=> {
-        const timer = setTimeout(()=> {
-            setDebouncedQuery(()=> searchTask);
-            setFilteredData(searchTask? tasks.filter(item=> item.title.toLowerCase().includes(searchTask.toLowerCase())) :[])
+    return () => clearTimeout(timer);
+  }, [searchTask, tasks]);
 
-            
-        }, 500);
-        return () => {
-      clearTimeout(timer);
-    };
+  const taskElement = tasks.map((task) => (
+    <TaskItem
+      key={task.id}
+      task={task}
+      onStatusChange={onStatusChange}
+      onDelete={onDelete}
+      onEdit={onEdit} // pass edit handler
+    />
+  ));
 
-    },[searchTask]);
+  return (
+    <>
+      <label htmlFor="searchTask" className="sr-only">Search Task</label>
+      <input
+        type="search"
+        id="searchTask"
+        placeholder="Search for Task"
+        value={searchTask}
+        onChange={(e) => setSearchTask(e.target.value)}
+        className="border-1 rounded-lg h-10 w-125 bg-white"
+      />
 
-    function handleStatusChange (taskId: string, taskStatus: TaskStatus) {
-        onStatusChange(taskId,taskStatus);
-    }
+      {isTyping && <p>Searching...</p>}
 
-    function handleDelete (taskId: string ) {
-        onDelete(taskId);
-    }
+      {filteredData.length > 0 && (
+        <div className="mb-2">
+          <h2 className="font-semibold">Search Results:</h2>
+          {filteredData.map((task) => (
+            <TaskItem
+              key={task.id}
+              task={task}
+              onStatusChange={onStatusChange}
+              onDelete={onDelete}
+              onEdit={onEdit} // support editing from search
+            />
+          ))}
+        </div>
+      )}
 
-    const taskElement = tasks.map((task) => <TaskItem key={task.id} task={task} onStatusChange={handleStatusChange} onDelete={handleDelete} />);
-
-    return (
-        <>
-        <input type="search" 
-        value={searchTask} 
-        onChange={(e)=>setSearchTask(e.target.value)} 
-        id="searchTask" 
-        placeholder="Search for task..." />
-        {isTyping && <p>Searching...</p>}
-      {filteredData.map((task) => (
-        <p key={task.id}>{task.title}</p>
-      ))}
-
-        <h1 className="font-semibold">Tasks:</h1>
-            {taskElement}
-        </>
-    )
+      <h1 className="font-semibold">Tasks:</h1>
+      {taskElement}
+    </>
+  );
 }
 
 export default TaskList;

@@ -1,112 +1,118 @@
 import { useEffect, useState } from "react";
-import type { Task } from "../../types";
-import type { TaskStatus } from "../../types";
+import type { Task, TaskStatus } from "../../types";
 import TaskList from "../TaskList/TaskList";
-import { sortTasks, exportTasks, importTasks} from "../../utils/taskUtils";
-import type { SortType } from "../../utils/taskUtils";
-import TaskFilter from "../TaskFilter/TaskFilter";
 import TaskForm from "../TaskForm/TaskForm";
+import TaskFilter from "../TaskFilter/TaskFilter";
+import { sortTasks, exportTasks, importTasks } from "../../utils/taskUtils";
+import type { SortType } from "../../utils/taskUtils";
 
 type Filter = {
   status?: TaskStatus | "";
   priority?: "low" | "medium" | "high" | "";
 };
+
 function Dashboard() {
-  // const [tasks, setTasks] = useState<Task[]>([]);
-  const [filters, setFilters] = useState({ status: "", priority: "" });
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const stored = localStorage.getItem("tasks");
+    return stored ? JSON.parse(stored) : [];
+  });
+
   const [showForm, setShowForm] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [filters, setFilters] = useState<Filter>({ status: "", priority: "" });
   const [sortBy, setSortBy] = useState<SortType>("");
 
-const [tasks, setTasks] = useState<Task[]>(() => {
-  const stored = localStorage.getItem("tasks");
-  return stored ? JSON.parse(stored) : [];
-});
-useEffect(()=>{
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-},[tasks]);
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
-
-   function handleAddTask(taskData: Omit<Task, "id">) {
-    const newTask: Task = {
-      id: Date.now().toString(), // unique ID
-      ...taskData,
-    };
+  function handleAddTask(taskData: Omit<Task, "id">) {
+    const newTask: Task = { id: Date.now().toString(), ...taskData };
     setTasks((prev) => [...prev, newTask]);
     setShowForm(false);
   }
-  function handleStatusChange(taskId: string, taskStatus: TaskStatus) {
+
+  function handleEditTask(updatedTask: Task) {
     setTasks((prev) =>
-      prev.map((task) => {
-        if (task.id === taskId) {
-          return { ...task, status: taskStatus };
-        } else {
-          return task;
-        }
-      }),
+      prev.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
   }
+
   function handleDelete(taskId: string) {
     setTasks((prev) => prev.filter((task) => task.id !== taskId));
   }
-  function handleFilterChange(newFilters: Filter) {
-    setFilters((prev) => ({
-      ...prev,
-      ...newFilters,
-    }));
+
+  function handleStatusChange(taskId: string, taskStatus: TaskStatus) {
+    setTasks((prev) =>
+      prev.map((task) => (task.id === taskId ? { ...task, status: taskStatus } : task))
+    );
   }
+
+  function handleFilterChange(newFilters: Filter) {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+  }
+
   const filteredTasks = tasks.filter((task) => {
     if (filters.status && task.status !== filters.status) return false;
     if (filters.priority && task.priority !== filters.priority) return false;
     return true;
   });
-  const sortedTasks =
-    sortBy === "" ? filteredTasks : sortTasks(filteredTasks, sortBy);
-  function handleSort(event: React.ChangeEvent<HTMLSelectElement>) {
-    setSortBy(event.target.value as "title" | "dueDate" | "");
-  }
+
+  const sortedTasks = sortBy === "" ? filteredTasks : sortTasks(filteredTasks, sortBy);
+
   const stats = {
     total: tasks.length,
-    completed: tasks.filter((task) => task.status === "completed").length,
-    inprogress: tasks.filter((task) => task.status === "in-progress").length,
-    pending: tasks.filter((task) => task.status === "pending").length,
+    completed: tasks.filter((t) => t.status === "completed").length,
+    inprogress: tasks.filter((t) => t.status === "in-progress").length,
+    pending: tasks.filter((t) => t.status === "pending").length,
   };
+
   return (
-    
-    
-     <div className="bg-indigo-200 min-h-screen p-6 flex flex-col items-center gap-6">
+    <div className="bg-indigo-200 min-h-screen p-6 flex flex-col items-center gap-6">
       <h1 className="text-4xl font-semibold text-center">Task Dashboard</h1>
+
       <button
         className="px-4 py-2 border-2 rounded-md font-bold hover:bg-indigo-300 transition"
-        onClick={() => setShowForm(true)}
+        onClick={() => {
+          setEditingTask(null);
+          setShowForm(true);
+        }}
       >
         Add New Task
       </button>
-      {showForm && <TaskForm onAddTask={handleAddTask} />}
+
+      {showForm && (
+        <TaskForm
+          onAddTask={handleAddTask}
+          taskToEdit={editingTask || undefined}
+          onEditTask={(task) => {
+            handleEditTask(task);
+            setEditingTask(null);
+            setShowForm(false);
+          }}
+          onClose={() => {
+            setEditingTask(null);
+            setShowForm(false);
+          }}
+        />
+      )}
+
       <TaskFilter onFilterChange={handleFilterChange} />
 
-      {/* export */}
-							<button
-								onClick={() => exportTasks(tasks)}
-								className="border-1"
-							>
-								Export Tasks
-							</button>
+      <button onClick={() => exportTasks(tasks)} className="border-1 rounded-lg p-2">
+        Export Tasks
+      </button>
 
-							{/* import */}
-							<label
-								htmlFor="import-file"
-								className="import-file-label"
-							>
-								Import Tasks
-							</label>
-							<input
-								id="import-file"
-								type="file"
-								accept="application/json"
-								onChange={(e) => importTasks(e, setTasks)}
-								className="border-1"
-							/>
-
+      <label htmlFor="import-file" className="border-1 rounded-lg p-2">
+        Import Tasks
+      </label>
+      <input
+        id="import-file"
+        type="file"
+        accept="application/json"
+        onChange={(e) => importTasks(e, setTasks)}
+        className="border-1 rounded-lg p-2"
+      />
 
       <div className="flex flex-col gap-2 items-center">
         <label htmlFor="sort" className=" font-bold">
@@ -115,7 +121,7 @@ useEffect(()=>{
         <select
           id="sort"
           value={sortBy}
-          onChange={handleSort}
+          onChange={(e) => setSortBy(e.target.value as "title" | "dueDate" | "")}
           className="px-2 py-1 border-1 rounded-md font-semibold"
         >
           <option value="">Sort By</option>
@@ -123,20 +129,27 @@ useEffect(()=>{
           <option value="title">Title</option>
         </select>
       </div>
+
       <div className="flex gap-4 text-sm font-semibold">
         <p>Total Tasks: {stats.total}</p>
         <p>Completed: {stats.completed}</p>
         <p>In Progress: {stats.inprogress}</p>
         <p>Pending: {stats.pending}</p>
       </div>
+
       <div className="flex flex-col gap-4 w-full max-w-md">
         <TaskList
           tasks={sortedTasks}
           onStatusChange={handleStatusChange}
           onDelete={handleDelete}
+          onEdit={(task) => {
+            setEditingTask(task);
+            setShowForm(true);
+          }}
         />
       </div>
     </div>
   );
 }
+
 export default Dashboard;
